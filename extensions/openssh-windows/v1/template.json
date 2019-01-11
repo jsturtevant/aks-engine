@@ -59,7 +59,7 @@
 		 "autoUpgradeMinorVersion": true,
 		 "settings": {
 			 "fileUris": [
-				 "[concat(parameters('artifactsLocation'), 'extensions/winrm/v1/installopenssh.ps1')]"
+				 "[concat(parameters('artifactsLocation'), 'extensions/openssh-windows/v1/installopenssh.ps1')]"
 			  ]
 		 },
 		 "protectedSettings": {
