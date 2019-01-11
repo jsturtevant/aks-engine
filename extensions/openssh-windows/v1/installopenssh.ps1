@@ -22,7 +22,8 @@ if (!(Test-Path "$adminpath"))
 }
 
 Write-Host "Adding key"
-Add-Content $adminpath\$adminfile $key
+$data = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($key))
+Add-Content $adminpath\$adminfile $data
 
 Write-Host "Setting required permissions"
 icacls $adminpath\$adminfile /remove "NT AUTHORITY\Authenticated Users"
