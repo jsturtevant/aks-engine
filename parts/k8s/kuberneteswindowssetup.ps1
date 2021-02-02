@@ -236,6 +236,18 @@ try
             $global:AppInsightsClient.TrackMetric("Install-OpenSSH", $installOpenSSHTimer.Elapsed.TotalSeconds)
         }
 
+        $windows_exporter = $true
+        if ( $windows_exporter ) {
+            Write-Log "Install Windows Exporter"
+            $installWindowsExporterTimer = [System.Diagnostics.Stopwatch]::StartNew()
+            # https://github.com/prometheus-community/windows_exporter#installation
+            curl.exe -LO https://github.com/prometheus-community/windows_exporter/releases/download/v0.15.0/windows_exporter-0.15.0-amd64.msi
+            msiexec /i windows_exporter-0.15.0-amd64.msi ENABLED_COLLECTORS=cpu,cs,container,os,iis,logical_disk,memory,net,process,service,system LISTEN_PORT=5000
+            Write-Log "Installed Windows Exporter!"
+            $global:AppInsightsClient.TrackMetric("Install-WindowsExporter", $installWindowsExporterTimer.Elapsed.TotalSeconds)
+        }
+
+
         Write-Log "Apply telemetry data setting"
         Set-TelemetrySetting -WindowsTelemetryGUID $global:WindowsTelemetryGUID
 
