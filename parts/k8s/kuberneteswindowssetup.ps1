@@ -243,6 +243,18 @@ try
             # https://github.com/prometheus-community/windows_exporter#installation
             curl.exe -LO https://github.com/prometheus-community/windows_exporter/releases/download/v0.15.0/windows_exporter-0.15.0-amd64.msi
             msiexec /i windows_exporter-0.15.0-amd64.msi ENABLED_COLLECTORS=cpu,cs,container,os,iis,logical_disk,memory,net,process,service,system LISTEN_PORT=5000
+            
+            $s = $null
+            while($s -eq $null){
+                $s = Get-Service windows_exporter
+                Start-Sleep -s 1
+            }
+            $s.WaitForStatus("Running")
+            stop-service windows_exporter
+            # need patched exporter for contianerd
+            mv "C:\Program Files\windows_exporter\windows_exporter.exe" "C:\Program Files\windows_exporter\windows_exporter.exe.bak"
+            curl.exe -L https://win10c.blob.core.windows.net/random/windows_exporter.exe -o "C:\Program Files\windows_exporter\windows_exporter.exe"
+            start-service windows_exporter
             Write-Log "Installed Windows Exporter!"
             $global:AppInsightsClient.TrackMetric("Install-WindowsExporter", $installWindowsExporterTimer.Elapsed.TotalSeconds)
         }
